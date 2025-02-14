@@ -13,13 +13,15 @@ class TrainingPipeline(Pipeline):
         super(). __init__ (models)
         self.criterion = criterion
 
+        self.bce = nn.BCEWithLogistsLoss()
+
         for model in self.models.values():
             model.train()
         
         params = []
         for model in self.models.values():
             params.extend(model.parameters())
-        optimizer = optim.Adam(params, lr=0.0001)  #10-4 
+        optimizer = optim.Adam(params, lr=10e-6)  #10-4 
 
         self.optimizer = optimizer
 

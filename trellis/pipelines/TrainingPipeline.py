@@ -29,7 +29,7 @@ class TrainingPipeline(Pipeline):
 
         self.weight_res = 1  # 10000
 
-        self.weight_bce = 10
+        self.weight_bce = 100
 
         print(self.weight_res)
 

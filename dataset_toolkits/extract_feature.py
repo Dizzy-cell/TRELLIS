@@ -154,6 +154,8 @@ if __name__ == '__main__':
                 }
                 patchtokens_lst = []
                 uv_lst = []
+                patchtokens_img_laynorm_lst = []
+                
                 for i in range(0, n_views, opt.batch_size):
                     batch_data = data[i:i+opt.batch_size]
                     bs = len(batch_data)
@@ -167,6 +169,7 @@ if __name__ == '__main__':
                     uv_lst.append(uv)
                 patchtokens = torch.cat(patchtokens_lst, dim=0)
                 uv = torch.cat(uv_lst, dim=0)
+                patchtokens_img_laynorm_lst = torch.cat(patchtokens_img_laynorm_lst, dim=0)
 
                 # save features
                 saver_executor.submit(saver, sha256, pack, patchtokens, uv)

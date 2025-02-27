@@ -19,6 +19,7 @@ from PIL import Image
 
 torch.set_grad_enabled(False)
 
+# (64, 64, 64, 1024) -> (8, 16, 16, 16)
 
 def get_data(frames, sha256):
     with ThreadPoolExecutor(max_workers=16) as executor:

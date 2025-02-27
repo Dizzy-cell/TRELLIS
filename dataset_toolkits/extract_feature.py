@@ -130,7 +130,7 @@ if __name__ == '__main__':
 
             loader_executor.map(loader, sha256s)
             
-            def saver(sha256, pack, patchtokens, uv):
+            def saver(sha256, pack, patchtokens, uv, patchtokens_img_laynorm):
                 pack['patchtokens'] = F.grid_sample(
                     patchtokens,
                     uv.unsqueeze(1),
@@ -138,6 +138,8 @@ if __name__ == '__main__':
                     align_corners=False,
                 ).squeeze(2).permute(0, 2, 1).cpu().numpy()
                 pack['patchtokens'] = np.mean(pack['patchtokens'], axis=0).astype(np.float16)
+                pack['patchtokens_img_norm'] = patchtokens_img_laynorm.cpu().detach().numpy().astype(np.float16)
+                
                 save_path = os.path.join(opt.output_dir, 'features', feature_name, f'{sha256}.npz')
                 np.savez_compressed(save_path, **pack)
                 records.append({'sha256': sha256, f'feature_{feature_name}' : True})
@@ -173,10 +175,10 @@ if __name__ == '__main__':
                     uv_lst.append(uv)
                 patchtokens = torch.cat(patchtokens_lst, dim=0)
                 uv = torch.cat(uv_lst, dim=0)
-                patchtokens_img_laynorm_lst = torch.cat(patchtokens_img_laynorm_lst, dim=0)
+                patchtokens_img_laynorm = torch.cat(patchtokens_img_laynorm_lst, dim=0)
 
                 # save features
-                saver_executor.submit(saver, sha256, pack, patchtokens, uv)
+                saver_executor.submit(saver, sha256, pack, patchtokens, uv, patchtokens_img_laynorm)
                 
             saver_executor.shutdown(wait=True)
     except:

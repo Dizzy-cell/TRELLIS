@@ -165,6 +165,10 @@ if __name__ == '__main__':
                     features = dinov2_model(batch_images, is_training=True)
                     uv = utils3d.torch.project_cv(positions, batch_extrinsics, batch_intrinsics)[0] * 2 - 1
                     patchtokens = features['x_prenorm'][:, dinov2_model.num_register_tokens + 1:].permute(0, 2, 1).reshape(bs, 1024, n_patch, n_patch)
+
+                    feature_img = F.layer_norm(features['x_prenorm'], features['x_prenorm'].shape[-1:])
+                    
+                    patchtokens_img_laynorm_lst.apend(feature_img)
                     patchtokens_lst.append(patchtokens)
                     uv_lst.append(uv)
                 patchtokens = torch.cat(patchtokens_lst, dim=0)

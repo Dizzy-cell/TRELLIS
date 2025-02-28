@@ -33,7 +33,7 @@ class SVAEDataset(Dataset):
         for path in self.features_names:
             name = os.path.basename(path)[:-4]
             if name in paths.keys():
-                paths[last_directory].append(path)
+                paths[name].append(path)
                 re_feature.append(path)
 
         self.features_names = sorted(re_feature)
